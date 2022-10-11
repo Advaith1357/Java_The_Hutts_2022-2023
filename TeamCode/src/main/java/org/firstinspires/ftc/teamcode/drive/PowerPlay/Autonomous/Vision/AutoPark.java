@@ -45,18 +45,7 @@ public class AutoPark extends LinearOpMode
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
     SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-    TrajectorySequence pos1 = drive.trajectorySequenceBuilder(new Pose2d())
-            .strafeLeft(12)
-            .forward(12)
-            .build();
-    TrajectorySequence pos2 = drive.trajectorySequenceBuilder(new Pose2d())
-            .strafeLeft(12)
-            .forward(12)
-            .build();
-    TrajectorySequence pos3 = drive.trajectorySequenceBuilder(new Pose2d())
-            .strafeLeft(12)
-            .forward(12)
-            .build();
+
     static final double FEET_PER_METER = 3.28084;
 
     // Lens intrinsics
@@ -82,8 +71,20 @@ public class AutoPark extends LinearOpMode
     AprilTagDetection tagOfInterest = null;
 
     @Override
-    public void runOpMode()
+    public void runOpMode() throws InterruptedException
     {
+        TrajectorySequence pos1 = drive.trajectorySequenceBuilder(new Pose2d())
+                .strafeLeft(12)
+                .forward(12)
+                .build();
+        TrajectorySequence pos2 = drive.trajectorySequenceBuilder(new Pose2d())
+                .strafeLeft(12)
+                .forward(12)
+                .build();
+        TrajectorySequence pos3 = drive.trajectorySequenceBuilder(new Pose2d())
+                .strafeLeft(12)
+                .forward(12)
+                .build();
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);

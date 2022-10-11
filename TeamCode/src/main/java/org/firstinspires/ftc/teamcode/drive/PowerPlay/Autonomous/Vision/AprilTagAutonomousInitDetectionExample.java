@@ -21,6 +21,7 @@
 
 package org.firstinspires.ftc.teamcode.drive.PowerPlay.Autonomous.Vision;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -29,6 +30,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.PowerPlay.Autonomous.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -73,6 +76,16 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+        //Trajectory Sequence
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+        Pose2d startPose = new Pose2d(0, 0, 0);
+
+        drive.setPoseEstimate(startPose);
+        TrajectorySequence fortnite = drive.trajectorySequenceBuilder(startPose)
+                .forward(100)
+                .build();
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -99,10 +112,7 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
          * The INIT-loop:
          * This REPLACES waitForStart!
          */
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+
 
         while (!isStarted() && !isStopRequested())
         {
@@ -216,15 +226,21 @@ public class AprilTagAutonomousInitDetectionExample extends LinearOpMode
             // e.g.
             if(tagOfInterest.pose.x <= 20)
             {
-                // do something
+                telemetry.addLine("1");
+                drive.followTrajectorySequence(fortnite);
+
             }
             else if(tagOfInterest.pose.x >= 20 && tagOfInterest.pose.x <= 50)
             {
-                // do something else
+                telemetry.addLine("2");
+                drive.followTrajectorySequence(fortnite);
+
             }
             else if(tagOfInterest.pose.x >= 50)
             {
-                // do something else
+                telemetry.addLine("3");
+                drive.followTrajectorySequence(fortnite);
+
             }
         }
 
