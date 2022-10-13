@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Teleopp", group="Iterative Opmode")
-public class Teleopp extends OpMode {
+@TeleOp(name="Test Teleop ඞ", group="Iterative Opmode")
+public class TestTelelp extends OpMode {
 
     private DcMotor front_left;
     private DcMotor front_right;
@@ -25,7 +25,9 @@ public class Teleopp extends OpMode {
     private double Strafemultiplier = 1;
 
     private int dbv4bTarget = 0;
-    private int elevatorTarget = 0;
+
+    public boolean mode1 = true;
+    public boolean mode2 = false;
 
     private ElapsedTime holdTimerA = new ElapsedTime();
 
@@ -47,15 +49,8 @@ public class Teleopp extends OpMode {
         back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        dbv4b.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        dbv4b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        dbv4b.setTargetPosition(0);
-        dbv4b.setPower(1);
-
-        elevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        elevator.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        elevator.setTargetPosition(0);
-        elevator.setPower(1);
+        dbv4b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        elevator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     @Override
@@ -86,76 +81,10 @@ public class Teleopp extends OpMode {
         back_right.setPower(speeds[3]);
 
 
-        //Slowmode
-        if(gamepad1.dpad_up){
-            Turnmultiplier = 1;
-            multiplier = 1;
-            Strafemultiplier = 1;
-        }
-        if(gamepad1.dpad_right){
-            Turnmultiplier = 0.70;
-            Strafemultiplier = 0.5;
-            multiplier = 1;
-        }
-
-        //Super slow
-        if(gamepad1.dpad_down){
-            Turnmultiplier = 0.4;
-            multiplier = 0.5;
-            Strafemultiplier = 0.5;
-        }
-        if(gamepad1.dpad_left){
-            Turnmultiplier = 0.5;
-            multiplier = 0.6;
-            Strafemultiplier = 0.5;
-        }
-
-        //Adjustment for 4 bar
-        dbv4bTarget += gamepad2.right_stick_y * -50;
-        elevatorTarget += gamepad2.left_stick_y * -50;
-
-        //Down
-        if(gamepad2.a){
-            dbv4bTarget = 0;
-            elevatorTarget = 0;
-        }
-        //Up
-        if(gamepad2.y){
-            dbv4bTarget = 0;
-            elevatorTarget = 0;
-        }
-        //Close
-        if(gamepad2.x){
-            claw1.setPosition(0);
-            claw2.setPosition(0);
-        }
-        //Open
-        if(gamepad2.b){
-            claw1.setPosition(0);
-            claw2.setPosition(0);
-        }
-
-
-//        if (gamepad2.back) {
-//            if ((mode1) && (holdTimerA.time() > 0.5)) {
-//
-//                telemetry.addLine("among");
-//                mode2 = true;
-//                mode1 = false;
-//                holdTimerA.reset();
-//            } else if ((mode2) && (holdTimerA.time() > 0.5)) {
-//                telemetry.addLine("us");
-//                mode1 = true;
-//                mode2 = false;
-//                holdTimerA.reset();
-//            }
-//        }
-
-        dbv4b.setTargetPosition(dbv4bTarget);
-
         telemetry.addData("dbv4b ඞ", dbv4b.getCurrentPosition());
         telemetry.addData("elevator ඞ", elevator.getCurrentPosition());
-
+        telemetry.addData("claw1 ඞ", claw1.getPosition());
+        telemetry.addData("claw2 ඞ", claw2.getPosition());
 
         telemetry.update();
     }
